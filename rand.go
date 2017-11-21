@@ -15,7 +15,7 @@ func RandSeedWithTime() {
 func getRandomHexString(length int, formatStr string) string {
 	var buffer []byte
 	if length%2 == 0 {
-		buffer = make([]byte, length/2)
+		buffer = make([]byte, length/2) // one byte generate two hex char, 16*16=256
 	} else {
 		buffer = make([]byte, (length+1)/2)
 	}

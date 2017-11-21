@@ -92,7 +92,7 @@ func BytesHead(data []byte, numLines int) (lines []string, rest []byte) {
 	if numLines <= 0 {
 		panic("numLines must be greater than zero")
 	}
-	lines = make([]string, 0, numLines)
+	lines = make([]string, 0, numLines) //:note, make([]T, length, capacity)
 	begin := 0
 	for i := range data {
 		if data[i] == '\n' {

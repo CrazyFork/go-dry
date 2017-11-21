@@ -223,6 +223,13 @@ func FileGetNonEmptyLines(filenameOrURL string, timeout ...time.Duration) (lines
 	return lines, nil
 }
 
+/*
+	config file would be like this
+
+		key="value"
+		another_key="another_value"
+		# this is comment
+*/
 func FileGetConfig(filenameOrURL string, timeout ...time.Duration) (map[string]string, error) {
 	data, err := FileGetBytes(filenameOrURL, timeout...)
 	if err != nil {
@@ -289,7 +296,7 @@ func FileGetLastLine(filenameOrURL string, timeout ...time.Duration) (line strin
 			return "", err
 		}
 		if start := info.Size() - 64*1024; start > 0 {
-			file.Seek(start, os.SEEK_SET)
+			file.Seek(start, os.SEEK_SET) // only read the last 64kb
 		}
 		data, err = ioutil.ReadAll(file)
 		if err != nil {
@@ -383,7 +390,7 @@ func FileFindModified(searchDirs []string, filenames ...string) (filePath string
 func FileTouch(filename string) error {
 	if FileExists(filename) {
 		now := time.Now()
-		return os.Chtimes(filename, now, now)
+		return os.Chtimes(filename, now, now) // change file time
 	}
 	file, err := os.Create(filename)
 	if err != nil {
@@ -406,7 +413,7 @@ func FileMD5Bytes(filenameOrURL string) ([]byte, error) {
 		return nil, err
 	}
 	hash := md5.New()
-	_, err = io.Copy(hash, bytes.NewBuffer(data))
+	_, err = io.Copy(hash, bytes.NewBuffer(data)) // :notes, notice the buffer wrapper
 	if err != nil {
 		return nil, err
 	}
@@ -442,7 +449,7 @@ func FileSetDeflate(filename string, data []byte) error {
 		return err
 	}
 	defer file.Close()
-	fileBuf := bufio.NewWriter(file)
+	fileBuf := bufio.NewWriter(file) // :note, another bufferio
 	defer fileBuf.Flush()
 	writer, err := flate.NewWriter(fileBuf, flate.BestCompression)
 	if err != nil {

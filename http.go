@@ -57,7 +57,7 @@ func (h *HTTPCompressHandler) ServeHTTP(response http.ResponseWriter, request *h
 		defer Deflate.ReturnWriter(writer)
 		response = wrappedResponseWriter{Writer: writer, ResponseWriter: response}
 	}
-	h.Handler.ServeHTTP(response, request)
+	h.Handler.ServeHTTP(response, request) //todo: with wrappedResponseWriter, double embeded syntax or what
 }
 
 // HTTPPostJSON marshalles data as JSON

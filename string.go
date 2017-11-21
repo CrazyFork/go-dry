@@ -68,7 +68,7 @@ func StringStripHTMLTags(text string) (plainText string) {
 		if char == '<' {
 			if buf == nil {
 				buf = bytes.NewBufferString(text)
-				buf.Reset()
+				buf.Reset() // set pointer to newly created buffer's content length
 			}
 			buf.WriteString(text[tagClose+1 : i])
 			tagStart = i

@@ -146,7 +146,7 @@ func newReflectSortable(slice, compareFunc interface{}) (*reflectSortable, error
 	}
 
 	argType := t.In(0)
-	ptrArgs := argType.Kind() == reflect.Ptr
+	ptrArgs := argType.Kind() == reflect.Ptr // only reflect.Ptr type has .Ele()
 	if ptrArgs {
 		argType = argType.Elem()
 	}

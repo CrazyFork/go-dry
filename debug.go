@@ -45,7 +45,7 @@ func Nop(dummiesIn ...interface{}) (dummyOut interface{}) {
 func StackTrace(skipFrames int) string {
 	buf := new(bytes.Buffer) // the returned data
 	var lastFile string
-	for i := 3; ; i++ {
+	for i := 3; ; i++ { // print 3 level of callstack.
 		contin := fprintStackTraceLine(i, &lastFile, buf)
 		if !contin {
 			break
@@ -61,6 +61,9 @@ func StackTraceLine(skipFrames int) string {
 	return buf.String()
 }
 
+// i, 是caller的层级，具体怎么定义的就不知道了
+// 试着打印 stacktrace 的信息，成功的话会返回true, lastFile参数有可能会设置为对应的文件名
+// 所有的结果会储存到 bytes.Buffer 中
 func fprintStackTraceLine(i int, lastFile *string, buf *bytes.Buffer) bool {
 	var lines [][]byte
 
@@ -91,6 +94,7 @@ var (
 	sep       = []byte("/")
 )
 
+// 从行数获得源代码中的第几行的信息
 // source returns a space-trimmed slice of the n'th line.
 func source(lines [][]byte, n int) []byte {
 	if n < 0 || n >= len(lines) {
@@ -99,6 +103,7 @@ func source(lines [][]byte, n int) []byte {
 	return bytes.Trim(lines[n], " \t")
 }
 
+// 通过pc(program counter)获得函数名称的信息
 // function returns, if possible, the name of the function containing the PC.
 func function(pc uintptr) []byte {
 	fn := runtime.FuncForPC(pc)
